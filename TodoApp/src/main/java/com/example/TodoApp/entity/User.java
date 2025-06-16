@@ -26,12 +26,10 @@ public class User {
     @Column(unique = true)
     private String email;
     private String password;
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true)
+    @ManyToMany(fetch = FetchType.EAGER) //user to role relation
+    private final List<Role> roles=new ArrayList<>();
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true) //user to todo relation
     private List<Todo> todos;
-//    @ManyToMany
-//    private final List<Role> roles = new ArrayList<>();
-//
-//    public Collection<Role> getRoles() {
-//        return roles;}
+
 
 }

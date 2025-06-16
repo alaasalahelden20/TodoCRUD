@@ -1,7 +1,10 @@
 package com.example.TodoApp.service;
 
+import com.example.TodoApp.dto.TodoDto;
 import com.example.TodoApp.dto.UserDto;
+import com.example.TodoApp.entity.Todo;
 import com.example.TodoApp.entity.User;
+import com.example.TodoApp.mapper.TodoMapper;
 import com.example.TodoApp.mapper.UserMapper;
 import com.example.TodoApp.repositories.UserRepository;
 import lombok.AllArgsConstructor;
@@ -21,6 +24,8 @@ public class UserServiceImpl implements UserService{
 private UserRepository userRepository;
 @Autowired
 private UserMapper userMapper;
+@Autowired
+private TodoMapper todoMapper;
 @Autowired
 private BCryptPasswordEncoder passwordEncoder;
 
@@ -49,8 +54,16 @@ private BCryptPasswordEncoder passwordEncoder;
     }
 
     @Override
-    public Boolean existByUserNameOrEmail(String Username,String Email) {
+    public boolean existByUserNameOrEmail(String Username,String Email) {
         return userRepository.existsByUsername(Username)|| userRepository.existsByEmail(Email);
+
+    }
+
+    @Override
+    public List<TodoDto> getUserTodos(String username) {
+        User user=userRepository.findByUsername(username).orElseThrow(RuntimeException::new);
+        List<Todo> userTodos=user.getTodos();
+        return todoMapper.toDtoList(userTodos);
 
     }
 
